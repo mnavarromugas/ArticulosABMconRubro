@@ -62,11 +62,45 @@ public class GestorDB {
 		}
 	}
 
+	public void modificarArticulo(Articulo articulo) {
+		try {
+			Connection conn = DriverManager.getConnection(CONN, USER, PASS);
+			PreparedStatement pstmt = conn.prepareStatement("UPDATE Articulo SET descripcion=?, precio=?, idRubro=? WHERE id=?");
+			pstmt.setString(1, articulo.getDescripcion());
+			pstmt.setFloat(2, articulo.getPrecio());
+			pstmt.setInt(3, articulo.getRubro().getId());
+			pstmt.setInt(4, articulo.getId());
+
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+
+	}
+
 	public void agregarOModificar(Articulo a) {
 		if (a.getId() == -1) {
 			agregarArticulo(a);
 		} else {
-			//modificarArticulo(a);
+			modificarArticulo(a);
+		}
+	}
+
+	public void eliminarArticulo(int id) {
+		try {
+			Connection conn = DriverManager.getConnection(CONN, USER, PASS);
+			PreparedStatement pstmt = conn.prepareStatement("DELETE FROM Articulo WHERE id=?");
+			pstmt.setInt(1, id);
+
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+
+		} catch (SQLException ex) {
+			ex.printStackTrace();
 		}
 	}
 
