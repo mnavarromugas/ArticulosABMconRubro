@@ -1,19 +1,23 @@
 package model;
 
 public class Articulo {
+
 	private int id;
 	private String descripcion;
 	private float precio;
+	private Rubro rubro;
 
-	public Articulo(int id, String descripcion, float precio) {
+	public Articulo(int id, String descripcion, float precio, Rubro rubro) {
 		this.id = id;
 		this.descripcion = descripcion;
 		this.precio = precio;
+		this.rubro = rubro;
 	}
 
-	public Articulo(String descripcion, float precio) {
+	public Articulo(String descripcion, float precio, Rubro rubro) {
 		this.descripcion = descripcion;
 		this.precio = precio;
+		this.rubro = rubro;
 		this.id = -1;
 	}
 
@@ -39,6 +43,14 @@ public class Articulo {
 
 	public void setPrecio(float precio) {
 		this.precio = precio;
+	}
+
+	public Rubro getRubro() {
+		return rubro;
+	}
+
+	public void setRubro(Rubro rubro) {
+		this.rubro = rubro;
 	}
 
 	@Override

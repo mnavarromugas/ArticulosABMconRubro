@@ -27,7 +27,7 @@ public class VentanaTodosLosArticulos extends javax.swing.JFrame {
 
 	private void cargarTabla() {
 		DefaultTableModel dm = new DefaultTableModel();
-		dm.setColumnIdentifiers(new String[] {"id", "descripcion", "precio"});
+		dm.setColumnIdentifiers(new String[] {"id", "descripcion", "precio", "rubro"});
 
 		GestorDB g = new GestorDB();
 		ArrayList<Articulo> lista = g.obtenerTodosLosArticulos();
@@ -36,7 +36,8 @@ public class VentanaTodosLosArticulos extends javax.swing.JFrame {
 		    dm.addRow(new String[] {
 				String.valueOf(articulo.getId()), 
 				articulo.getDescripcion(), 
-				String.valueOf(articulo.getPrecio())
+				String.valueOf(articulo.getPrecio()),
+				articulo.getRubro().getNombre()
 			});
 		}
 

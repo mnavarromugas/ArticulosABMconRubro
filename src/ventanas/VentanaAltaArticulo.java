@@ -6,20 +6,27 @@
 package ventanas;
 
 import gestor.GestorDB;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import model.Articulo;
+import model.Rubro;
 
 /**
  *
  * @author mnava
  */
 public class VentanaAltaArticulo extends javax.swing.JFrame {
+	GestorDB g;
 
 	/**
 	 * Creates new form VentanaAltaArticulo
 	 */
 	public VentanaAltaArticulo() {
 		initComponents();
+
+		g =  new GestorDB();
+
+		cargarRubros();
 	}
 
 	/**
@@ -36,6 +43,8 @@ public class VentanaAltaArticulo extends javax.swing.JFrame {
         txtPrecio = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         btnAgregar = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        cboRubros = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -50,6 +59,8 @@ public class VentanaAltaArticulo extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("Rubro");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -59,14 +70,16 @@ public class VentanaAltaArticulo extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtDescripcion)
                     .addComponent(txtPrecio, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnAgregar))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnAgregar)))
+                    .addComponent(cboRubros, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -80,7 +93,11 @@ public class VentanaAltaArticulo extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 152, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cboRubros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
                 .addComponent(btnAgregar)
                 .addContainerGap())
         );
@@ -90,12 +107,12 @@ public class VentanaAltaArticulo extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
 		try {
-			GestorDB g = new GestorDB();
 
 			String descripcion = txtDescripcion.getText();
 			Float precio = Float.parseFloat(txtPrecio.getText());
+			Rubro rubro = (Rubro) cboRubros.getSelectedItem();
 
-			Articulo a = new Articulo(descripcion, precio);
+			Articulo a = new Articulo(descripcion, precio, rubro);
 
 			g.agregarArticulo(a);
 
@@ -142,9 +159,19 @@ public class VentanaAltaArticulo extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
+    private javax.swing.JComboBox cboRubros;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField txtDescripcion;
     private javax.swing.JTextField txtPrecio;
     // End of variables declaration//GEN-END:variables
+
+	private void cargarRubros() {
+		ArrayList<Rubro> listaDeRubros = g.obtenerTodosLosRubros();
+
+		for (Rubro rubro : listaDeRubros) {
+			cboRubros.addItem(rubro);
+		}
+	}
 }
