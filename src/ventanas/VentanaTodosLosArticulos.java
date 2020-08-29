@@ -16,26 +16,29 @@ import model.Articulo;
  */
 public class VentanaTodosLosArticulos extends javax.swing.JFrame {
 
+	GestorDB g;
+
 	/**
 	 * Creates new form VentanaTodosLosArticulos
 	 */
 	public VentanaTodosLosArticulos() {
 		initComponents();
 
+		this.g = new GestorDB();
+
 		cargarTabla();
 	}
 
 	private void cargarTabla() {
 		DefaultTableModel dm = new DefaultTableModel();
-		dm.setColumnIdentifiers(new String[] {"id", "descripcion", "precio", "rubro"});
+		dm.setColumnIdentifiers(new String[]{"id", "descripcion", "precio", "rubro"});
 
-		GestorDB g = new GestorDB();
 		ArrayList<Articulo> lista = g.obtenerTodosLosArticulos();
 
 		for (Articulo articulo : lista) {
-		    dm.addRow(new String[] {
-				String.valueOf(articulo.getId()), 
-				articulo.getDescripcion(), 
+			dm.addRow(new String[]{
+				String.valueOf(articulo.getId()),
+				articulo.getDescripcion(),
 				String.valueOf(articulo.getPrecio()),
 				articulo.getRubro().getNombre()
 			});
@@ -89,6 +92,11 @@ public class VentanaTodosLosArticulos extends javax.swing.JFrame {
         });
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -128,9 +136,28 @@ public class VentanaTodosLosArticulos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-		VentanaAltaArticulo va = new VentanaAltaArticulo();
+		int row = lstTabla.getSelectedRow();
+		int idAModificarOAgregar = -1;
+		if (row != -1) {
+			idAModificarOAgregar = Integer.parseInt((String) lstTabla.getValueAt(row, 0));
+		}
+
+		VentanaAltaArticulo va = new VentanaAltaArticulo(idAModificarOAgregar);
 		va.setVisible(true);
     }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+		int row = lstTabla.getSelectedRow();
+
+		if (row == -1) {
+			return; //no hay fila seleccionada
+		}
+
+		int idABorrar = Integer.parseInt((String) lstTabla.getValueAt(row, 0));
+		g.eliminarArticulo(idABorrar);
+
+		cargarTabla();
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
 	/**
 	 * @param args the command line arguments

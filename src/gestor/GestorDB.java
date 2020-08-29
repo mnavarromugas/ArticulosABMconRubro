@@ -155,4 +155,37 @@ public class GestorDB {
 
 		return resultado;
 	}
+
+	public Articulo obtenerArticuloPorId(int id) {
+
+		Articulo resultado = null;
+
+		try {
+			Connection conn = DriverManager.getConnection(CONN, USER, PASS);
+			PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Articulo WHERE id=?");
+			pstmt.setInt(1, id); 
+
+			ResultSet rs = pstmt.executeQuery();
+
+			if(rs.next()) {
+				//int idR = rs.getInt(1);
+				String descripcion = rs.getString(2);
+				float precio = rs.getFloat(3);
+				int idRubro = rs.getInt(4);
+
+				Rubro rubro = obtenerRubroPorID(idRubro);
+
+				resultado = new Articulo(id, descripcion, precio, rubro);
+			}
+
+			pstmt.close();
+			conn.close();
+
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+
+		return resultado;
+
+	}
 }
