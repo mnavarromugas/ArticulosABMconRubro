@@ -1,5 +1,6 @@
 package gestor;
 
+import dto.DtoSumaNombre;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -187,5 +188,57 @@ public class GestorDB {
 
 		return resultado;
 
+	}
+
+	public float reporteObtenerElPrecioMaximo() {
+		float resultado = -1;
+
+		try {
+
+			Connection conn = DriverManager.getConnection(CONN, USER, PASS);
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT MAX(precio) as maximo FROM Articulo");
+
+			if(rs.next()) {
+				resultado = rs.getFloat("maximo");
+			}
+
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		
+		return resultado;
+	}
+
+	public ArrayList<DtoSumaNombre> reporteObtenerSumaYNombre() {
+		ArrayList<DtoSumaNombre> resultado = new ArrayList<>();
+
+		try {
+			Connection conn = DriverManager.getConnection(CONN, USER, PASS);
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT SUM(precio) as suma, r.nombre FROM Articulo JOIN Rubro r ON r.id =idRubro GROUP BY r.nombre");
+
+			while(rs.next()) {
+				float suma = rs.getFloat("suma");
+				String nombre = rs.getString("nombre");
+
+				DtoSumaNombre dto = new DtoSumaNombre(suma, nombre);
+				resultado.add(dto);
+			}
+
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+
+
+		return resultado;
 	}
 }
